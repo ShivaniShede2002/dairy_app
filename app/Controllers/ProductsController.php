@@ -1,53 +1,54 @@
 <?php
 
 namespace App\Controllers;
-
 use App\Models\ProductsModel;
+use App\Models\TaxesModel;
 
-class ProductsController extends BaseController
-{
-    public function index()
-    {
+class ProductsController extends BaseController{
+       public function index(){
 
         if (auth()->loggedIn()) {
-            $product_model = new ProductsModel();
-            $data['products'] = $product_model->findAll();
-            return view("products/view_products", $data);
-        } else {
-            return redirect()->to('/login');
-        }
-    }
+              $product_model = new ProductsModel();
+              $data['products'] = $product_model->findAll();   
+        return view("products/view_products",$data);
+       }
+       else {
+              return redirect()->to('/login');
+          }
+       }
 
     //    add product
-    public function add_products()
+       public function add_products()
     {
-        return view('products/add_products');
+        $taxes_model = new TaxesModel();
+        $data['taxes'] = $taxes_model->findAll();  
+        return view('products/add_products',$data);
     }
 
     public function store_products()
     {
-        $session = \Config\Services::session();
-        $product_model = new ProductsModel();
+       $session = \Config\Services::session();
+       $product_model = new ProductsModel();
+       $taxes_model = new TaxesModel();
+
         $data = [
             'product_name' => $this->request->getPost('product_name'),
             'product_category' => $this->request->getPost('product_category'),
             'weight' => $this->request->getPost('product_weight'),
+            "tax_id" => $this->request->getPost('tax_id'),
             'unit' => $this->request->getPost('product_unit'),
             'price_before_tax' => $this->request->getPost('price_before_tax'),
             'selling_price_including_tax' => $this->request->getPost('selling_price_including_tax'),
             'tax_amount' => $this->request->getPost('product_tax_amount'),
         ];
-        print_r($data);
+        print_r($data); 
         $product_model->save($data);
-
-$session->setFlashdata('status', 'Product inserted Successfully !');
+        $session->setFlashdata('status', 'Product inserted Successfully !');
         return $this->response->redirect(base_url('/ProductsController'));
     }
 
     //delete product
-
-    public function delete_product($id)
-    {
+    public function delete_product($id){
         $session = \Config\Services::session();
         $product_model = new ProductsModel();
             $product_model->delete($id);
@@ -56,16 +57,14 @@ $session->setFlashdata('status', 'Product deleted Successfully !');
     }
 
     //Edit view
-    public function edit_product($id)
-    {
+    public function edit_product($id){
         $product_model = new ProductsModel();
         $data['products'] = $product_model->find($id);
-        return view('products/edit_products', $data);
+        return view('products/edit_products',$data);
     }
 
     //Edit
-    public function update_product()
-    {
+    public function update_product(){
         $session = \Config\Services::session();
         $product_model = new ProductsModel();
         $id = $this->request->getPost('product_id');

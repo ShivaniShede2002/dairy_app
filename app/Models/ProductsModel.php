@@ -11,5 +11,5 @@ class ProductsModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
-    protected $allowedFields = ['product_name','product_category' ,'weight', 'unit', 'price_before_tax','selling_price_including_tax','tax_amount','created_at','updated_at', 'deleted_at'];
+    protected $allowedFields = ['product_name','product_category' ,'weight', 'unit','tax_id','price_before_tax','selling_price_including_tax','tax_amount','created_at','updated_at', 'deleted_at'];
 }
